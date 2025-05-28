@@ -1,0 +1,20 @@
+// AWS SDK for accessing DynamoDB
+const AWS = require('aws-sdk');
+// Creating a DynamoDB document client
+const docClient = new AWS.DynamoDB.DocumentClient();
+
+exports.handler = async (event) => {
+    const { noteId, content } = JSON.parse(event.body);
+    const params = {
+        TableName: 'NotesTable',
+        Item: {
+            noteId,
+            content
+        }
+    };
+    await docClient.put(params).promise();
+    return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Note created successfully" })
+    };
+};
