@@ -1,0 +1,40 @@
+service: serverless-notes-app
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+
+functions:
+  createNote:
+    handler: createNote.handler
+    events:
+      - http:
+          path: notes
+          method: post
+  getNotes:
+    handler: getNotes.handler
+    events:
+      - http:
+          path: notes
+          method: get
+  deleteNote:
+    handler: deleteNote.handler
+    events:
+      - http:
+          path: notes/{noteId}
+          method: delete
+
+resources:
+  Resources:
+    NotesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: NotesTable
+        AttributeDefinitions:
+          - AttributeName: noteId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: noteId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
